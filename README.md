@@ -12,11 +12,17 @@
 
 > One number. One sentence. One tap.
 
-![Position Glance preview](docs/demo.gif)
+## 🎬 Watch the demo
 
-**[Watch with Indian-English voiceover (MP4, 42s)](docs/demo-voice.mp4)** · [Silent version](docs/demo.mp4) · [Narration script](docs/narration-script.md) · [API trace](docs/demo-trace.json)
+[![Click to play the 42-second demo with Indian-English voiceover](docs/demo-poster.png)](docs/demo-voice.mp4)
 
-The voiceover uses macOS's built-in **Rishi (en-IN)** voice at a natural conversational pace — no cloud TTS and no "AI narrator" phrasing. Regenerate with `python3 tools/add_narration.py` after `python3 tools/make_demo.py`.
+**Click the poster above to play the narrated video.** It opens the MP4 directly in GitHub with sound on. Prefer a silent autoplay loop? It's right here:
+
+![Position Glance live API trace](docs/demo.gif)
+
+[▶ Watch with voiceover (MP4, 42s)](docs/demo-voice.mp4) · [Silent MP4](docs/demo.mp4) · [Standalone audio](docs/demo-narration.m4a) · [Narration script](docs/narration-script.md) · [API trace](docs/demo-trace.json)
+
+The voiceover uses macOS's built-in **Rishi (en-IN)** voice at a natural conversational pace — no cloud TTS and no "AI narrator" phrasing. Regenerate with `python3 tools/make_demo.py`, `python3 tools/add_narration.py` and `python3 tools/make_poster.py`.
 
 ---
 
@@ -122,6 +128,8 @@ server/signer.mjs        one-use consent tokens, reduce-only testnet signing
 server/telegram.mjs      optional Track 01 bridge: pairing, status, YES/NO close, receipts
 demo/index.html          browser preview of the 576×288 lens + live API trace
 tools/make_demo.py       regenerates the demo video from a real API trace
+tools/add_narration.py   adds the Indian-English voiceover and muxes it
+tools/make_poster.py     builds the clickable README poster
 tests/smoke.mjs          8 dependency-free backend checks
 .github/workflows/ci.yml backend smoke test + client build
 docs/ARCHITECTURE.md     sequence diagram, safety boundaries, limitations
