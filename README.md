@@ -14,15 +14,15 @@
 
 ## 🎬 Watch the demo
 
-[![Click to play the 42-second demo with Indian-English voiceover](docs/demo-poster.png)](docs/demo-voice.mp4)
+[![Click to play the 42-second demo with Indian-English female voiceover](docs/demo-poster.png)](docs/demo-voice.mp4)
 
-**Click the poster above to play the narrated video.** It opens the MP4 directly in GitHub with sound on. Prefer a silent autoplay loop? It's right here:
+**Click the poster above to play the video** — Indian-English female narration (Tara, en-IN), 42 seconds, with sound. It opens the MP4 directly in GitHub. Prefer a silent autoplay loop? It's right here:
 
 ![Position Glance live API trace](docs/demo.gif)
 
-[▶ Watch with voiceover (MP4, 42s)](docs/demo-voice.mp4) · [Silent MP4](docs/demo.mp4) · [Standalone audio](docs/demo-narration.m4a) · [Narration script](docs/narration-script.md) · [API trace](docs/demo-trace.json)
+[▶ Watch with Indian female voiceover (MP4, 42s)](docs/demo-voice.mp4) · [Silent MP4](docs/demo.mp4) · [Standalone audio](docs/demo-narration.m4a) · [Narration script](docs/narration-script.md) · [API trace](docs/demo-trace.json)
 
-The voiceover uses macOS's built-in **Rishi (en-IN)** voice at a natural conversational pace — no cloud TTS and no "AI narrator" phrasing. Regenerate with `python3 tools/make_demo.py`, `python3 tools/add_narration.py` and `python3 tools/make_poster.py`.
+The voiceover uses macOS's built-in **Tara (English (India))** female en-IN voice at a natural conversational pace — no cloud TTS and no "AI narrator" phrasing. Regenerate with `python3 tools/make_demo.py`, `python3 tools/add_narration.py` and `python3 tools/make_poster.py`.
 
 ---
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Add a natural Indian-English voiceover to docs/demo.mp4.
 
-Uses macOS `say` with the en-IN voice Rishi (no cloud TTS, no 'AI voice'),
+Uses macOS `say` with the en-IN female voice Tara (no cloud TTS, no 'AI voice'),
 then muxes the result into docs/demo-voice.mp4. Run after make_demo.py.
 """
 import shutil
@@ -15,8 +15,8 @@ VIDEO = DOCS / "demo.mp4"
 OUT = DOCS / "demo-voice.mp4"
 AUDIO_OUT = DOCS / "demo-narration.m4a"
 
-VOICE = "Rishi"
-RATE = 172
+VOICE = "Tara (English (India))"
+RATE = 168
 STARTS_MS = [500, 8000, 15500, 23000, 30500, 38000]
 LINES = [
     "This is Position Glance. A little app for Even G2 glasses — one open position, right in your line of sight.",

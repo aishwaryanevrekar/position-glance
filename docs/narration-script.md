@@ -1,6 +1,6 @@
 # Demo narration script (Indian English)
 
-**Voice:** macOS `Rishi` (en-IN), rate 172 wpm. Delivered conversationally — short, natural sentences, no "AI assistant" phrasing. Regenerate with `python3 tools/add_narration.py`.
+**Voice:** macOS `Tara (English (India))` — an Indian female en-IN voice, rate 168 wpm. Delivered conversationally — short, natural sentences, no "AI assistant" phrasing. Regenerate with `python3 tools/add_narration.py`.
 
 | Time | On screen | Spoken line |
 |---|---|---|
