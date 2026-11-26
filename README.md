@@ -1,5 +1,7 @@
 # Position Glance
 
+![Position Glance logo](assets/logo.svg)
+
 [![CI](https://github.com/aishwaryanevrekar/position-glance/actions/workflows/ci.yml/badge.svg)](https://github.com/aishwaryanevrekar/position-glance/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-8%20passing-brightgreen)](tests/smoke.mjs)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
@@ -8,7 +10,11 @@
 
 **Track 02 · Crypto & DeFi** — G2 smart-glasses app that shows one Hyperliquid testnet position with unrealized PnL, turns a short voice phrase into a reduce-only order, and submits it only after an explicit tap on the glasses or R1 ring.
 
-**Open source under MIT.** Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), [CHANGELOG.md](CHANGELOG.md) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+**Open source under MIT.** Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), [CHANGELOG.md](CHANGELOG.md), [brand.md](brand.md), [MOTION.md](MOTION.md) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+## 🆓 Try it free, no glasses or keys
+
+Open the **Virtual G2 Trial** at `http://localhost:8787/trial/index.html` after `npm run server`. It renders the 576×288 green lens inside a browser glasses frame and runs the real API flow on simulated testnet data. No account, no API key, no payment, no funds — everything is local and MIT licensed. The 3D scene source is in `video3d/index.html` and is fully deterministic (`window.seek(t)`).
 
 > One number. One sentence. One tap.
 
@@ -23,6 +29,14 @@
 [▶ Watch with Indian female voiceover (MP4, 42s)](docs/demo-voice.mp4) · [Silent MP4](docs/demo.mp4) · [Standalone audio](docs/demo-narration.m4a) · [Narration script](docs/narration-script.md) · [API trace](docs/demo-trace.json)
 
 The voiceover uses macOS's built-in **Tara (English (India))** female en-IN voice at a natural conversational pace — no cloud TTS and no "AI narrator" phrasing. Regenerate with `python3 tools/make_demo.py`, `python3 tools/add_narration.py` and `python3 tools/make_poster.py`.
+
+### 🎥 3D edition — 2:50, the full story
+
+[![Click to play the 2:50 3D demo with Indian female narration](docs/demo-3d-poster.png)](docs/demo-3d.mp4)
+
+**Click the poster** for the longer film: a code-rendered 3D data space, six depth-layered scenes, the same Indian female voice, and an original score written in code. Exactly **2:50** — inside the 3-minute submission limit. No paid model, no video generator, no account.
+
+[▶ Watch the 3D film (MP4, 2:50)](docs/demo-3d.mp4) · [Short loop GIF](docs/demo-3d.gif) · [Narration script](video3d/script.md) · [3D scene source](video3d/index.html) · [Regenerate](tools/render_3d.mjs)
 
 ---
 
@@ -130,11 +144,18 @@ demo/index.html          browser preview of the 576×288 lens + live API trace
 tools/make_demo.py       regenerates the demo video from a real API trace
 tools/add_narration.py   adds the Indian-English voiceover and muxes it
 tools/make_poster.py     builds the clickable README poster
+tools/make_3d_poster.py  builds the clickable 3D-edition poster
+assets/logo.svg|png      vector and raster logo; icon.svg|png square icon
+video3d/index.html       deterministic code-rendered 3D scene (window.seek)
+video3d/script.md        narrated script for the 2:50 film
+tools/render_3d.mjs      renders frames, voice and score into the 3D film
+trial/index.html         free virtual-G2 browser trial, no keys or funds
 tests/smoke.mjs          8 dependency-free backend checks
 .github/workflows/ci.yml backend smoke test + client build
 docs/ARCHITECTURE.md     sequence diagram, safety boundaries, limitations
 docs/                    demo-voice.mp4 (narrated), demo.mp4 (silent), demo.gif,
-                         demo-narration.m4a, narration-script.md, demo-trace.json
+                         demo-narration.m4a, narration-script.md, demo-trace.json,
+                         demo-3d.mp4, demo-3d.gif, demo-3d-poster.png
 ```
 
 Run `npm test` for the dependency-free smoke test and `npm run check` for syntax validation.

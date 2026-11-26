@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Position Glance — 3D demo renderer</title>
+<style>
+  html,body{margin:0;background:#0B0E0C;overflow:hidden}
+  canvas{display:block;width:1280px;height:720px}
+</style>
+</head>
+<body>
+<canvas id="c" width="1280" height="720"></canvas>
+<script>
+/* Deterministic software 3D: every frame depends only on t.
+   No Math.random at render time. window.seek(t) makes frame export exact. */
+const W = 1280, H = 720, F = 900;
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let T = 0;
+
+const C = {
+  bg: '#0B0E0C', surface: '#121812', green: '#8DFF9B',
+  dim: '#3D7F4B', white: '#E5E5E5', amber: '#FFB27A'
+};
+
+// Sections: real facts only, taken from docs/demo-trace.json and the README.
+const SECTIONS = [
+  { from: 0,   to: 14,  label: 'OPENING',  cards: [
+    { x:-3.4, z:11, l1:'POSITION', l2:'GLANCE', accent:2 },
+    { x:0,    z:14, l1:'TRACK 02', l2:'CRYPTO & DEFI' },
+    { x:5.0,  z:17, l1:'EVEN G2', l2:'HYPERLIQUID TESTNET' } ] },
+  { from: 14,  to: 42,  label: 'THE GLANCE', cards: [
+    { x:-3.4, z:10.5, l1:'BTC LONG', l2:'0.0500', accent:2 },
+    { x:0,    z:13.5, l1:'uPnL', l2:'+$1,001.26', accent:2 },
+    { x:5.0,  z:16.5, l1:'MARK', l2:'96,173' } ] },
+  { from: 42,  to: 76,  label: 'THE STACK', cards: [
+    { x:-3.4, z:10.5, l1:'READ', l2:'/info  ·  no auth' },
+    { x:0,    z:13.5, l1:'VOICE', l2:'PCM → WAV → STT' },
+    { x:5.0,  z:16.5, l1:'WRITE', l2:'reduce-only /exchange' } ] },
+  { from: 76,  to: 110, label: 'THE INTENT', cards: [
+    { x:-3.4, z:10.5, l1:'SAID', l2:'close half my BTC long' },
+    { x:0,    z:13.5, l1:'PARSED', l2:'SELL 0.025 BTC', accent:2 },
+    { x:5.0,  z:16.5, l1:'RULE', l2:'REDUCE-ONLY' } ] },
+  { from: 110, to: 140, label: 'THE CONSENT', cards: [
+    { x:-3.4, z:10.5, l1:'TAP', l2:'YES', accent:2 },
+    { x:0,    z:13.5, l1:'TOKEN', l2:'one-use · 60 s' },
+    { x:5.0,  z:16.5, l1:'SIGNER', l2:'testnet agent wallet' } ] },
+  { from: 140, to: 170, label: 'THE PROMISE', cards: [
+    { x:-3.4, z:10.5, l1:'SAFETY', l2:'no funds · no advice' },
+    { x:0,    z:13.5, l1:'BRIDGE', l2:'Telegram YES / NO' },
+    { x:5.0,  z:16.5, l1:'OPEN', l2:'source · MIT', accent:2 } ] },
+];
+
+function seeded(i, k) {
+  const v = Math.sin(i * 127.1 + k * 311.7) * 43758.5453;
+  return v - Math.floor(v);
+}
+function project(x, y, z, camY, camZ) {
+  const dz = Math.max(1, z - camZ);
+  const s = F / dz;
+  return [W / 2 + x * s, H / 2 - (y - camY) * s, s];
+}
+function roundRect(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function drawGround(camY, camZ) {
+  ctx.save();
+  for (let i = -6; i <= 6; i++) {
+    const x = i * 1.6;
+    const [x1, y1] = project(x, -2.6, 4, camY, camZ);
+    const [x2, y2] = project(x, -2.6, 34, camY, camZ);
+    ctx.strokeStyle = i === 0 ? 'rgba(61,127,75,.35)' : 'rgba(61,127,75,.14)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  }
+  for (let z = 5; z < 34; z += 2.5) {
+    const [x1, y1] = project(-10, -2.6, z, camY, camZ);
+    const [x2, y2] = project(10, -2.6, z, camY, camZ);
+    ctx.strokeStyle = 'rgba(61,127,75,.12)';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawRain(camY, camZ) {
+  ctx.save();
+  ctx.strokeStyle = 'rgba(141,255,155,.13)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 110; i++) {
+    const px = (seeded(i, 1) - 0.5) * 22;
+    const pz = 5 + seeded(i, 2) * 24;
+    const speed = 5 + seeded(i, 3) * 5;
+    const py = 5 - ((T * speed + seeded(i, 4) * 8) % 8);
+    const [x1, y1] = project(px, py, pz, camY, camZ);
+    const [x2, y2] = project(px, py - 0.35, pz, camY, camZ);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawCard(card, alpha, local, camY, camZ) {
+  if (alpha <= 0.01) return;
+  // Each card drifts forward slightly inside its shot; no shake, no spin.
+  const z = card.z - Math.min(0.8, local * 0.06);
+  const y = 0.4 + Math.sin(card.x + T * 0.08) * 0.12;
+  const halfW = 1.9, halfH = 0.95;
+  const [cx, cy, s] = project(card.x, y, z, camY, camZ);
+  const [lx, ly] = project(card.x - halfW, y + halfH, z, camY, camZ);
+  const [rx, ry] = project(card.x + halfW, y - halfH, z, camY, camZ);
+  const w = rx - lx, h = ry - ly;
+  if (w < 20 || h < 10) return;
+
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.8);
+  glow.addColorStop(0, 'rgba(141,255,155,.09)');
+  glow.addColorStop(1, 'rgba(141,255,155,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(cx - w, cy - h, w * 2, h * 2);
+
+  roundRect(lx, ly, w, h, Math.max(4, s * 0.02));
+  ctx.fillStyle = C.surface;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(141,255,155,.55)';
+  ctx.lineWidth = Math.max(1, s * 0.0025);
+  ctx.stroke();
+
+  const fs1 = Math.max(11, 0.17 * s);
+  const fs2 = Math.max(15, 0.30 * s);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = C.dim;
+  ctx.font = `${fs1}px Menlo, monospace`;
+  ctx.fillText(card.l1, cx, cy - h * 0.12);
+  ctx.fillStyle = card.accent === 2 ? C.green : C.white;
+  const fit = w / Math.max(1, card.l2.length * 0.62);
+  ctx.font = `bold ${Math.min(fs2, w * 0.19, fit)}px Menlo, monospace`;
+  ctx.fillText(card.l2, cx, cy + h * 0.28);
+  ctx.restore();
+}
+
+function render() {
+  const t = T;
+  const idx = Math.max(0, SECTIONS.findIndex(s => t >= s.from && t < s.to));
+  const sec = SECTIONS[idx];
+  const local = Math.max(0, t - sec.from);
+  const camZ = 1.2 - t * 0.006;
+  const camY = 1.0 + t * 0.0022;
+
+  ctx.fillStyle = C.bg;
+  ctx.fillRect(0, 0, W, H);
+  drawGround(camY, camZ);
+  drawRain(camY, camZ);
+
+  sec.cards.forEach((card, i) => {
+    const appear = Math.min(1, Math.max(0, (local - i * 0.45) / 0.8));
+    const disappear = Math.min(1, Math.max(0, (sec.to - t) / 0.5));
+    drawCard(card, Math.min(appear, disappear), local, camY, camZ);
+  });
+
+  // Section marker top left, always readable.
+  ctx.save();
+  ctx.fillStyle = C.amber;
+  ctx.font = '18px Menlo, monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText(`POSITION GLANCE  /  ${sec.label}`, 44, 44);
+  ctx.fillStyle = C.dim;
+  ctx.font = '15px Menlo, monospace';
+  ctx.fillText('TRACK 02  ·  CRYPTO & DEFI  ·  TESTNET', 44, 70);
+  ctx.restore();
+
+  // Final title lands in the last third.
+  if (t >= 146) {
+    const a = Math.min(1, (t - 146) / 1.2);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.textAlign = 'left';
+    ctx.font = 'bold 72px Menlo, monospace';
+    ctx.fillStyle = C.white;
+    ctx.fillText('POSITION', 96, 618);
+    const tw = ctx.measureText('POSITION ').width;
+    ctx.fillStyle = C.green;
+    ctx.fillText('GLANCE', 96 + tw, 618);
+    ctx.fillStyle = C.dim;
+    ctx.font = '22px Menlo, monospace';
+    ctx.fillText('one number · one sentence · one tap', 100, 658);
+    ctx.restore();
+  }
+}
+
+window.seek = (t) => { T = Math.max(0, Number(t) || 0); render(); return T; };
+const params = new URLSearchParams(location.search);
+if (params.has('render')) {
+  window.seek(params.get('t') || 0);
+  document.title = 'READY';
+} else {
+  let start = performance.now();
+  (function loop(now) {
+    T = ((now - start) / 1000) % 170;
+    render();
+    requestAnimationFrame(loop);
+  })(start);
+}
+</script>
+</body>
+</html>

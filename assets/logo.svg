@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" width="1200" height="360" role="img" aria-label="Position Glance logo">
+  <title>Position Glance</title>
+  <rect width="1200" height="360" fill="#0B0E0C"/>
+
+  <!-- Mark: a G2-like glasses outline with one positioned lens -->
+  <g transform="translate(72 84)" fill="none" stroke="#8DFF9B" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="18" y="40" width="176" height="104" rx="42" stroke="#3D7F4B"/>
+    <rect x="212" y="40" width="176" height="104" rx="42"/>
+    <path d="M194 88 h18" stroke="#3D7F4B"/>
+    <path d="M0 74 h18 M388 74 h18" stroke="#3D7F4B"/>
+    <!-- sight line and target inside the active lens -->
+    <circle cx="300" cy="92" r="26"/>
+    <circle cx="300" cy="92" r="7" fill="#8DFF9B" stroke="none"/>
+    <path d="M300 52 v16 M300 116 v16 M260 92 h16 M324 92 h16"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="522" y="182" fill="#E5E5E5" font-family="Menlo, SFMono-Regular, monospace" font-size="68" font-weight="bold" letter-spacing="4">POSITION</text>
+  <text x="522" y="262" fill="#8DFF9B" font-family="Menlo, SFMono-Regular, monospace" font-size="68" font-weight="bold" letter-spacing="4">GLANCE</text>
+  <text x="526" y="310" fill="#3D7F4B" font-family="Menlo, SFMono-Regular, monospace" font-size="22" letter-spacing="2">ONE NUMBER · ONE SENTENCE · ONE TAP</text>
+</svg>

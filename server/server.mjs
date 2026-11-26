@@ -96,7 +96,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     // Static files for the browser demo / built Even Hub app.
-    if (req.method === 'GET' && (url.pathname.startsWith('/demo/') || url.pathname === '/')) {
+    if (req.method === 'GET' && (url.pathname.startsWith('/demo/') || url.pathname.startsWith('/trial/') || url.pathname.startsWith('/video3d/') || url.pathname === '/')) {
       const rel = url.pathname === '/' ? 'demo/index.html' : url.pathname.slice(1);
       const safe = resolve(ROOT, rel);
       if (!safe.startsWith(ROOT)) return send(res, 403, { error: 'forbidden' });

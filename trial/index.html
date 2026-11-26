@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Virtual G2 Trial — Position Glance</title>
+<style>
+  :root{--green:#8dff9b;--dim:#3d7f4b;--bg:#0b0e0c;--surface:#121812;--white:#e5e5e5;--amber:#ffb27a}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--white);font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+  .wrap{max-width:1180px;margin:0 auto;padding:26px 20px}
+  h1{font-size:20px;color:var(--green);margin:0 0 4px}
+  .sub{color:#7d8c80;margin-bottom:14px}
+  .free{display:inline-block;border:1px solid var(--dim);border-radius:20px;padding:3px 12px;color:var(--green);font-size:11px;margin-left:8px}
+  .grid{display:grid;grid-template-columns:640px 1fr;gap:24px}
+  .panel{border:1px solid #1e2a20;background:var(--surface);border-radius:12px;padding:16px}
+  .label{font-size:11px;color:#66756a;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+
+  /* Virtual glasses: one lens carries the live G2 display */
+  .glasses{position:relative;height:330px;display:flex;align-items:center;justify-content:center;perspective:900px}
+  .frame{position:relative;width:600px;height:230px;border:10px solid #1d2a1f;border-radius:70px 70px 80px 80px;
+    box-shadow:0 20px 60px #000, inset 0 0 0 2px #2d5936;background:#080c09;
+    transform:rotateX(6deg)}
+  .frame:before,.frame:after{content:'';position:absolute;top:96px;width:74px;height:14px;background:#1d2a1f}
+  .frame:before{left:-80px;border-radius:10px 0 0 10px}
+  .frame:after{right:-80px;border-radius:0 10px 10px 0}
+  .lens{position:absolute;left:12px;top:12px;width:576px;height:206px;border-radius:52px;overflow:hidden;
+    background:radial-gradient(circle at 50% 30%,#0e1a11,#071009 70%);
+    display:flex;align-items:center;justify-content:center}
+  .lens-inner{width:520px;height:180px;color:var(--green);font-size:20px;line-height:1.25;
+    white-space:pre-wrap;overflow:hidden;text-shadow:0 0 8px #42ff6a55}
+  .controls{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+  button{background:#132018;color:var(--green);border:1px solid #2d5936;border-radius:8px;padding:9px 14px;font:inherit;cursor:pointer}
+  button:hover{background:#1b3022}
+  button.warn{color:var(--amber);border-color:#5a3a22}
+  input{background:#0a0f0b;color:var(--green);border:1px solid #2d5936;border-radius:8px;padding:9px 12px;font:inherit;width:300px}
+  a{color:var(--green)}
+  #log{height:430px;overflow:auto;font-size:12px;color:#93a397;white-space:pre-wrap}
+  #log .ev{color:var(--green)}#log .err{color:#ff8f8f}
+  .notes{margin-top:18px;color:#7d8c80;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Virtual G2 Trial <span class="free">100% FREE · OPEN SOURCE · NO KEYS · NO FUNDS</span></h1>
+  <div class="sub">Try the whole Position Glance flow in a browser. Simulated Hyperliquid testnet data, real API code, nothing broadcast.</div>
+  <div class="grid">
+    <div class="panel">
+      <div class="label">Virtual glasses · 576 × 288 green display</div>
+      <div class="glasses"><div class="frame"><div class="lens"><div class="lens-inner" id="lens">POSITION GLANCE\n\nConnecting…</div></div></div></div>
+      <div class="controls">
+        <button id="tap">TAP (voice / YES)</button>
+        <button id="swipe" class="warn">SWIPE (NO)</button>
+        <button id="reset">RESET</button>
+      </div>
+      <div class="controls">
+        <input id="phrase" value="close half my BTC long" placeholder="spoken phrase (demo)" />
+        <button id="speak">USE PHRASE</button>
+      </div>
+      <div class="controls">
+        <button id="intro">▶ Watch 3D intro</button>
+        <a href="https://github.com/aishwaryanevrekar/position-glance"><button>⭐ Source on GitHub</button></a>
+      </div>
+      <div class="notes">Double-tap on the real glasses exits the app. Here, RESET returns to the glance. The 3D intro is rendered in code, no model and no payment.</div>
+    </div>
+    <div class="panel">
+      <div class="label">Live backend trace</div>
+      <div id="log"></div>
+    </div>
+  </div>
+</div>
+<script>
+const BACKEND = location.port === '8787' ? location.origin : 'http://localhost:8787';
+const lens = document.getElementById('lens'), log = document.getElementById('log'), phrase = document.getElementById('phrase');
+let phase='glance', position=null, pending=null, busy=false;
+function out(s,c=''){const d=document.createElement('div');if(c)d.className=c;d.textContent=`[${new Date().toISOString().slice(11,19)}] ${s}`;log.prepend(d)}
+function show(s){lens.textContent=s}
+async function api(p,init){out(`${init?.method||'GET'} ${p}`);const r=await fetch(BACKEND+p,init);const j=await r.json();out(`  ${r.status} ${JSON.stringify(j).slice(0,160)}`,j.error?'err':'ev');if(!r.ok)throw new Error(j.message||`HTTP ${r.status}`);return j}
+async function refresh(){try{const d=await api('/api/position');position=d.position;if(phase==='glance')render()}catch(e){if(phase==='glance')show('BACKEND OFFLINE\nStart: npm run server')}}
+function render(){if(!position)return show('NO POSITION DATA');show(position.rows.slice(0,4).join('\n')+'\n\nTAP voice · 2× exit')}
+async function startVoice(text){if(busy||(phase!=='glance'&&phase!=='result'))return;phase='listening';show('LISTENING\nSay: close half my BTC long\nTAP to stop');out(' mic ON (16 kHz s16le)','ev');await new Promise(r=>setTimeout(r,500));await finishVoice(text||phrase.value)}
+async function finishVoice(text){if(busy)return;busy=true;phase='glance';render();try{
+  show('UNDERSTANDING…');
+  const stt=await api('/api/transcribe',{method:'POST',headers:{'content-type':'audio/pcm'},body:new Uint8Array()});
+  const parsed=await api('/api/intent',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({text:stt.text||text,position})});
+  if(!parsed.order){phase='result';show('NO ORDER\n'+String(parsed.message).slice(0,64)+'\n\nTAP to retry');return}
+  pending=parsed;phase='draft';const o=parsed.order;
+  show(`"${String(stt.text||text).slice(0,44)}"\n\n${o.side.toUpperCase()} ${o.size} ${o.coin} REDUCE-ONLY\n\nTAP=YES · SWIPE=NO`);
+}catch(e){phase='result';show('ERROR\n'+String(e.message).slice(0,64))}finally{busy=false}}
+async function confirm(yes){if(busy)return;busy=true;if(!yes){pending=null;phase='glance';render();busy=false;out(' declined — nothing sent');return}
+  phase='sending';show('SENDING TESTNET ORDER…');try{
+  const r=await api('/api/confirm',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({confirmToken:pending?.confirmToken,confirmed:true})});
+  phase='result';show(`${r.label}\n${r.ok?'ORDER ACCEPTED':'NOT SENT'}\n${String(r.txId||'').slice(0,18)}\n\nTAP to retry`);pending=null;
+}catch(e){phase='result';show('SEND FAILED\n'+String(e.message).slice(0,64))}finally{busy=false}}
+document.getElementById('tap').onclick=()=>{if(phase==='draft')return confirm(true);if(phase==='sending')return;if(phase==='listening')return finishVoice(phrase.value);if(phase==='result'){phase='glance';render();return}return startVoice()};
+document.getElementById('swipe').onclick=()=>{if(phase==='draft')confirm(false)};
+document.getElementById('speak').onclick=()=>startVoice(phrase.value);
+document.getElementById('reset').onclick=()=>{pending=null;phase='glance';render()};
+document.getElementById('intro').onclick=()=>{window.open('video3d/index.html','_blank')};
+(async()=>{try{await api('/api/config');await refresh()}catch(e){show('BACKEND OFFLINE\nStart: npm run server')}setInterval(refresh,15000)})();
+</script>
+</body>
+</html>

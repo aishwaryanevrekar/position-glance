@@ -14,6 +14,10 @@ All notable changes are documented here. Format follows [Keep a Changelog](https
 - Research basis: `../reports/G2 hackathon track selection.md` and `../research/position_glance_strategy_and_build_plan.md`.
 - Dependency-free smoke test (`tests/smoke.mjs`, 8 checks), MIT license, contributing guide, security policy, code of conduct, and CI workflow.
 - Human-paced Indian-English female narration (macOS `Tara (English (India))`, en-IN) muxed into `docs/demo-voice.mp4`, with `docs/narration-script.md` and `tools/add_narration.py`.
+- 2:50 3D edition: `video3d/index.html` deterministic code-rendered scene, `video3d/script.md`, `tools/render_3d.mjs`, `docs/demo-3d.mp4` with original code-generated score, and `tools/make_3d_poster.py`.
+- Free browser-based Virtual G2 Trial at `trial/index.html`, no keys, no funds, no payment.
+- `brand.md`, `MOTION.md` and the read-first `CLAUDE.md` rule from the brand-intake workflow.
+- Vector and PNG logo assets in `assets/` (SVG, 1200x360 PNG, 512x512 icon).
 
 ### Fixed
 
