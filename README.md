@@ -18,35 +18,13 @@ Open the **Virtual G2 Trial** at `http://localhost:8787/trial/index.html` after 
 
 > One number. One sentence. One tap.
 
-## 🎬 Watch the demo
+## 🎬 Watch the demo — 2:50
 
-[![Click to play the 42-second demo with Indian-English female voiceover](docs/demo-poster.png)](https://raw.githubusercontent.com/aishwaryanevrekar/position-glance/master/docs/demo-voice.mp4)
+[![Click to play the Position Glance 2:50 demo](docs/demo-3d-poster.png)](https://raw.githubusercontent.com/aishwaryanevrekar/position-glance/master/docs/demo-3d.mp4)
 
-**Click the poster above to play the video** — Indian-English female narration (Tara, en-IN), 42 seconds, with sound. It opens the MP4 directly in GitHub. Prefer a silent autoplay loop? It's right here:
+**Click the poster to play the film** — a code-rendered 3D data space, six depth-layered scenes, Indian-English female narration (Tara, en-IN), and an original score written in code. Exactly **2:50**, inside the 3-minute submission limit. No paid model, no video generator, no account.
 
-![Position Glance live API trace](docs/demo.gif)
-
-[▶ Watch the 42s film (opens raw MP4)](https://raw.githubusercontent.com/aishwaryanevrekar/position-glance/master/docs/demo-voice.mp4) · [Silent MP4](docs/demo.mp4) · [Standalone audio](docs/demo-narration.m4a) · [Narration script](docs/narration-script.md) · [API trace](docs/demo-trace.json)
-
-The voiceover uses macOS's built-in **Tara (English (India))** female en-IN voice at a natural conversational pace — no cloud TTS and no "AI narrator" phrasing. Regenerate with `python3 tools/make_demo.py`, `python3 tools/add_narration.py` and `python3 tools/make_poster.py`.
-
-### 🎥 3D edition — 2:50, the full story
-
-[![Click to play the 2:50 3D demo with Indian female narration](docs/demo-3d-poster.png)](https://raw.githubusercontent.com/aishwaryanevrekar/position-glance/master/docs/demo-3d.mp4)
-
-**Click the poster** for the longer film: a code-rendered 3D data space, six depth-layered scenes, the same Indian female voice, and an original score written in code. Exactly **2:50** — inside the 3-minute submission limit. No paid model, no video generator, no account.
-
-![Position Glance 3D loop](docs/demo-3d.gif)
-
-[▶ Watch the 3D film (raw MP4, 2:50 — plays in browser)](https://raw.githubusercontent.com/aishwaryanevrekar/position-glance/master/docs/demo-3d.mp4) · [Narration script](video3d/script.md) · [3D scene source](video3d/index.html) · [Regenerate](tools/render_3d.mjs)
-
-### ♻️ Perspective shift — 8-second brand loop
-
-![Perspective shift loop](docs/perspective-shift.gif)
-
-[▶ MP4](https://raw.githubusercontent.com/aishwaryanevrekar/position-glance/master/docs/perspective-shift.mp4) · [Effect source](effects/perspective-shift/effect.html) · [Renderer](tools/render_effect.mjs)
-
-Built with the `motion-effects` skill (effect 13), in `brand.md` / `MOTION.md` colours and type. The three wordmark layers share one vanishing point; frame 0 and frame 8 are pixel-identical. No invented figures, no paid tools.
+[▶ Watch the film (raw MP4, opens in browser)](https://raw.githubusercontent.com/aishwaryanevrekar/position-glance/master/docs/demo-3d.mp4) · [Short loop GIF](docs/demo-3d.gif) · [Narration script](video3d/script.md) · [3D scene source](video3d/index.html) · [Regenerate](tools/render_3d.mjs)
 
 ---
 
@@ -151,23 +129,16 @@ server/intent.mjs        WAV wrapping, STT, intent parsing, size resolution
 server/signer.mjs        one-use consent tokens, reduce-only testnet signing
 server/telegram.mjs      optional Track 01 bridge: pairing, status, YES/NO close, receipts
 demo/index.html          browser preview of the 576×288 lens + live API trace
-tools/make_demo.py       regenerates the demo video from a real API trace
-tools/add_narration.py   adds the Indian-English voiceover and muxes it
-tools/make_poster.py     builds the clickable README poster
-tools/make_3d_poster.py  builds the clickable 3D-edition poster
+tools/make_3d_poster.py  builds the clickable README poster
 assets/logo.svg|png      vector and raster logo; icon.svg|png square icon
 video3d/index.html       deterministic code-rendered 3D scene (window.seek)
 video3d/script.md        narrated script for the 2:50 film
-effects/perspective-shift/effect.html  8s seamless brand loop (motion-effects #13)
-tools/render_effect.mjs  exports the loop to MP4 + GIF
 tools/render_3d.mjs      renders frames, voice and score into the 3D film
 trial/index.html         free virtual-G2 browser trial, no keys or funds
 tests/smoke.mjs          8 dependency-free backend checks
 .github/workflows/ci.yml backend smoke test + client build
 docs/ARCHITECTURE.md     sequence diagram, safety boundaries, limitations
-docs/                    demo-voice.mp4 (narrated), demo.mp4 (silent), demo.gif,
-                         demo-narration.m4a, narration-script.md, demo-trace.json,
-                         demo-3d.mp4, demo-3d.gif, demo-3d-poster.png
+docs/                    demo-3d.mp4 (2:50 film), demo-3d.gif, demo-3d-poster.png
 ```
 
 Run `npm test` for the dependency-free smoke test and `npm run check` for syntax validation.
