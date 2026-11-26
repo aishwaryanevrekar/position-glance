@@ -40,6 +40,14 @@ The voiceover uses macOS's built-in **Tara (English (India))** female en-IN voic
 
 [▶ Watch the 3D film (raw MP4, 2:50 — plays in browser)](https://raw.githubusercontent.com/aishwaryanevrekar/position-glance/master/docs/demo-3d.mp4) · [Narration script](video3d/script.md) · [3D scene source](video3d/index.html) · [Regenerate](tools/render_3d.mjs)
 
+### ♻️ Perspective shift — 8-second brand loop
+
+![Perspective shift loop](docs/perspective-shift.gif)
+
+[▶ MP4](https://raw.githubusercontent.com/aishwaryanevrekar/position-glance/master/docs/perspective-shift.mp4) · [Effect source](effects/perspective-shift/effect.html) · [Renderer](tools/render_effect.mjs)
+
+Built with the `motion-effects` skill (effect 13), in `brand.md` / `MOTION.md` colours and type. The three wordmark layers share one vanishing point; frame 0 and frame 8 are pixel-identical. No invented figures, no paid tools.
+
 ---
 
 ## The problem
@@ -150,6 +158,8 @@ tools/make_3d_poster.py  builds the clickable 3D-edition poster
 assets/logo.svg|png      vector and raster logo; icon.svg|png square icon
 video3d/index.html       deterministic code-rendered 3D scene (window.seek)
 video3d/script.md        narrated script for the 2:50 film
+effects/perspective-shift/effect.html  8s seamless brand loop (motion-effects #13)
+tools/render_effect.mjs  exports the loop to MP4 + GIF
 tools/render_3d.mjs      renders frames, voice and score into the 3D film
 trial/index.html         free virtual-G2 browser trial, no keys or funds
 tests/smoke.mjs          8 dependency-free backend checks

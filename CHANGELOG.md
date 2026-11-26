@@ -18,6 +18,7 @@ All notable changes are documented here. Format follows [Keep a Changelog](https
 - Free browser-based Virtual G2 Trial at `trial/index.html`, no keys, no funds, no payment.
 - `brand.md`, `MOTION.md` and the read-first `CLAUDE.md` rule from the brand-intake workflow.
 - Vector and PNG logo assets in `assets/` (SVG, 1200x360 PNG, 512x512 icon).
+- Perspective shift brand loop (`effects/perspective-shift/effect.html`, `docs/perspective-shift.mp4|gif`) built with the motion-effects skill; seamless 8s loop verified pixel-identical at frames 0 and 8.
 
 ### Fixed
 
