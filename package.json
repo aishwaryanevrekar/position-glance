@@ -1,0 +1,32 @@
+{
+  "name": "position-glance",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "G2 smart-glasses app: Hyperliquid testnet position glance with voice-to-signed-order flow",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "pack": "npm run build && evenhub pack app.json dist",
+    "simulate": "evenhub-simulator http://localhost:5173",
+    "server": "node server/server.mjs",
+    "start": "node server/server.mjs"
+  },
+  "dependencies": {
+    "@evenrealities/even_hub_sdk": "^0.0.14"
+  },
+  "devDependencies": {
+    "@evenrealities/evenhub-cli": "^0.1.12",
+    "@evenrealities/evenhub-simulator": "^0.7.2",
+    "typescript": "^5.7.0",
+    "vite": "^5.4.0"
+  },
+  "optionalDependencies": {
+    "@nktkas/hyperliquid": "^0.27.0",
+    "viem": "^2.30.0"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

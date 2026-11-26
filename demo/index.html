@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Position Glance — G2 simulator preview</title>
+<style>
+  :root { --green:#8dff9b; --dim:#3d7f4b; --bg:#0b0e0c; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#070907; color:#cfd8cf; font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace; }
+  .wrap { max-width:1120px; margin:0 auto; padding:28px 20px; }
+  h1 { margin:0 0 4px; font-size:18px; color:var(--green); }
+  .sub { color:#738074; margin-bottom:20px; }
+  .cols { display:grid; grid-template-columns: 600px 1fr; gap:22px; }
+  .panel { border:1px solid #1e2a20; border-radius:10px; background:#0c1210; padding:16px; }
+  .label { color:#66756a; font-size:11px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:10px; }
+  .g2 {
+    width:576px; height:288px; border-radius:14px; padding:24px;
+    background:radial-gradient(circle at 50% 30%, #0e1a11, #071009 70%);
+    border:1px solid #26402a; box-shadow:inset 0 0 60px #000, 0 0 0 6px #121812;
+    color:var(--green); text-shadow:0 0 8px #42ff6a55; font-size:22px; line-height:1.28;
+    display:flex; flex-direction:column; justify-content:center; white-space:pre-wrap; overflow:hidden;
+  }
+  .g2 .small { font-size:13px; color:var(--dim); text-shadow:none; }
+  .controls { margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; }
+  button { background:#132018; color:var(--green); border:1px solid #2d5936; border-radius:8px; padding:9px 14px; font:inherit; cursor:pointer; }
+  button:hover { background:#1b3022; }
+  button.warn { color:#ffb27a; border-color:#5a3a22; }
+  input { background:#0a0f0b; color:var(--green); border:1px solid #2d5936; border-radius:8px; padding:9px 12px; font:inherit; width:310px; }
+  #log { height:470px; overflow:auto; font-size:12px; color:#93a397; white-space:pre-wrap; }
+  #log .ev { color:var(--green); }
+  #log .err { color:#ff8f8f; }
+  .badge { display:inline-block; border:1px solid #2d5936; border-radius:20px; padding:2px 10px; color:var(--green); font-size:11px; margin-left:8px; }
+  @media (max-width:1180px) { .cols { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Position Glance <span class="badge" id="mode">connecting…</span></h1>
+  <div class="sub">Even G2 preview (576×288 monochrome) · Hyperliquid testnet · read → voice → explicit confirm → signed reduce-only order</div>
+  <div class="cols">
+    <div class="panel">
+      <div class="label">Glasses display</div>
+      <div class="g2" id="lens">POSITION GLANCE\n\nConnecting to backend…</div>
+      <div class="controls">
+        <button id="tap">TAP (voice / YES)</button>
+        <button id="swipe" class="warn">SWIPE (NO)</button>
+        <button id="reset">RESET</button>
+      </div>
+      <div class="controls">
+        <input id="phrase" value="close half my BTC long" placeholder=" spoken phrase (demo)" />
+        <button id="speak">USE PHRASE</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="label">Live API trace</div>
+      <div id="log"></div>
+    </div>
+  </div>
+</div>
+<script>
+const BACKEND = location.origin.includes('5173') ? 'http://localhost:8787' : location.origin;
+const lens = document.getElementById('lens');
+const log = document.getElementById('log');
+const mode = document.getElementById('mode');
+const phrase = document.getElementById('phrase');
+let phase = 'glance', position = null, pending = null, busy = false;
+
+function out(line, cls='') {
+  const d = document.createElement('div');
+  if (cls) d.className = cls;
+  d.textContent = `[${new Date().toISOString().slice(11,19)}] ${line}`;
+  log.prepend(d);
+}
+function show(s) { lens.textContent = s; }
+async function api(path, init) {
+  out(`${init?.method || 'GET'} ${path}`);
+  const r = await fetch(BACKEND + path, init);
+  const j = await r.json();
+  out(`  ${r.status} ${JSON.stringify(j).slice(0,180)}`, j.error ? 'err' : 'ev');
+  if (!r.ok) throw new Error(j.message || `HTTP ${r.status}`);
+  return j;
+}
+async function refresh() {
+  try {
+    const d = await api('/api/position');
+    position = d.position;
+    if (phase === 'glance') render();
+  } catch (e) { if (phase === 'glance') show('BACKEND OFFLINE\n' + e.message); }
+}
+function render() {
+  if (!position) return show('NO POSITION DATA');
+  show(position.rows.slice(0,4).join('\n') + '\n\nTAP voice · 2× exit');
+}
+async function startVoice(textOverride) {
+  if (busy || (phase !== 'glance' && phase !== 'result')) return;
+  phase = 'listening';
+  show('LISTENING\nSay: close half my BTC long\nTAP to stop');
+  out(' mic ON (16 kHz s16le, glasses array)', 'ev');
+  const text = textOverride || phrase.value;
+  await new Promise(r => setTimeout(r, 650));
+  await finishVoice(text);
+}
+async function finishVoice(text) {
+  if (busy) return;
+  busy = true;
+  phase = 'glance'; render();
+  try {
+    show('UNDERSTANDING…');
+    const stt = await api('/api/transcribe', {
+      method:'POST', headers:{'content-type':'audio/pcm'},
+      body: new Uint8Array() // demo mode: backend returns deterministic transcript
+    });
+    const parsed = await api('/api/intent', {
+      method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({ text: stt.text || text, position })
+    });
+    if (!parsed.order) {
+      phase = 'result';
+      show('NO ORDER\n' + String(parsed.message).slice(0,70) + '\n\nTAP to retry');
+      return;
+    }
+    pending = parsed;
+    phase = 'draft';
+    const o = parsed.order;
+    show(`"${String(stt.text||text).slice(0,46)}"\n\n${o.side.toUpperCase()} ${o.size} ${o.coin} REDUCE-ONLY\n\nTAP=YES · SWIPE=NO`);
+  } catch (e) {
+    phase = 'result'; show('ERROR\n' + String(e.message).slice(0,70));
+  } finally { busy = false; }
+}
+async function confirm(yes) {
+  if (busy) return;
+  busy = true;
+  if (!yes) { pending=null; phase='glance'; render(); busy=false; out(' user declined — nothing sent'); return; }
+  phase = 'sending'; show('SENDING TESTNET ORDER…');
+  try {
+    const r = await api('/api/confirm', {
+      method:'POST', headers:{'content-type':'application/json'},
+      body: JSON.stringify({ confirmToken: pending?.confirmToken, confirmed: true })
+    });
+    phase = 'result';
+    show(`${r.label||'TESTNET'}\n${r.ok?'ORDER ACCEPTED':'NOT SENT'}\n${String(r.txId||'').slice(0,20)}\n\nTAP to retry`);
+    pending = null;
+  } catch (e) { phase='result'; show('SEND FAILED\n'+String(e.message).slice(0,70)); }
+  finally { busy=false; }
+}
+document.getElementById('tap').onclick = () => {
+  if (phase === 'draft') return confirm(true);
+  if (phase === 'sending') return;
+  if (phase === 'listening') return finishVoice(phrase.value);
+  if (phase === 'result') { phase='glance'; render(); return; }
+  return startVoice();
+};
+document.getElementById('swipe').onclick = () => { if (phase==='draft') confirm(false); };
+document.getElementById('speak').onclick = () => startVoice(phrase.value);
+document.getElementById('reset').onclick = () => { pending=null; phase='glance'; render(); };
+(async () => {
+  try {
+    const c = await api('/api/config');
+    mode.textContent = c.demoMode ? 'DEMO MODE · SIMULATED' : 'TESTNET · LIVE';
+    await refresh();
+  } catch (e) { show('BACKEND OFFLINE\nStart: npm run server'); }
+  setInterval(refresh, 15000);
+})();
+</script>
+</body>
+</html>

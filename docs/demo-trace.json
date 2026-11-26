@@ -1,0 +1,131 @@
+{
+  "capturedAt": "2026-11-26T17:16:15.641Z",
+  "steps": [
+    {
+      "name": "BOOT",
+      "endpoint": "GET /api/config",
+      "request": null,
+      "response": {
+        "demoMode": true,
+        "network": "testnet",
+        "address": null,
+        "capabilities": {
+          "realRead": false,
+          "realWrite": false,
+          "realStt": false,
+          "realIntent": false
+        }
+      },
+      "lens": "POSITION GLANCE\n\nConnecting…"
+    },
+    {
+      "name": "READ",
+      "endpoint": "GET /api/position",
+      "request": null,
+      "response": {
+        "position": {
+          "empty": false,
+          "simulated": true,
+          "coin": "BTC",
+          "size": 0.05,
+          "side": "buy",
+          "entryPx": 94172,
+          "mark": 96175.69500943093,
+          "pnl": 1003.69500943093,
+          "roe": 5.230017753754061,
+          "liquidationPx": 88410,
+          "rows": [
+            "BTC LONG 0.0500",
+            "uPnL +$1003.70  +5.2%",
+            "MARK 96,176",
+            "SIMULATED · NO ADVICE"
+          ],
+          "raw": {
+            "accountValue": 10042.18
+          }
+        },
+        "fetchedAt": "2026-11-26T17:16:15.631Z",
+        "network": "SIMULATED"
+      },
+      "lens": "BTC LONG 0.0500\nuPnL +$1003.70  +5.2%\nMARK 96,176\nSIMULATED · NO ADVICE\n\nTAP voice · 2× exit"
+    },
+    {
+      "name": "VOICE",
+      "endpoint": "G2 microphone → WAV → /api/transcribe",
+      "request": {
+        "source": "G2 4-mic, 16 kHz s16le",
+        "phrase": "close half my BTC long"
+      },
+      "response": {
+        "text": "close half my BTC long",
+        "simulated": true
+      },
+      "lens": "LISTENING\nSay: close half my BTC long\nTAP to stop"
+    },
+    {
+      "name": "STT",
+      "endpoint": "POST /api/transcribe",
+      "request": {
+        "bytes": 0,
+        "note": "demo mode → deterministic transcript"
+      },
+      "response": {
+        "text": "close half my BTC long",
+        "simulated": true
+      },
+      "lens": "UNDERSTANDING…"
+    },
+    {
+      "name": "INTENT",
+      "endpoint": "POST /api/intent",
+      "request": {
+        "text": "close half my BTC long"
+      },
+      "response": {
+        "intent": {
+          "action": "reduce",
+          "coin": "BTC",
+          "fraction": 0.5,
+          "size": null,
+          "side": "sell",
+          "simulated": true
+        },
+        "order": {
+          "coin": "BTC",
+          "size": 0.025,
+          "side": "sell",
+          "reduceOnly": true,
+          "source": "demo-parser"
+        },
+        "confirmToken": "14832e06-b100-4447-bcba-aaa40ee44cc4",
+        "expiresAt": 1795713435638,
+        "message": "SELL 0.025 BTC reduce-only — awaiting explicit confirmation"
+      },
+      "lens": "\"close half my BTC long\"\n\nSELL 0.025 BTC REDUCE-ONLY\n\nTAP=YES · SWIPE=NO"
+    },
+    {
+      "name": "CONFIRM (TAP=YES)",
+      "endpoint": "POST /api/confirm",
+      "request": {
+        "confirmed": true,
+        "oneUseToken": true
+      },
+      "response": {
+        "ok": true,
+        "simulated": true,
+        "network": "SIMULATED",
+        "label": "TESTNET · SIMULATED",
+        "order": {
+          "coin": "BTC",
+          "size": 0.025,
+          "side": "sell",
+          "reduceOnly": true,
+          "source": "demo-parser"
+        },
+        "txId": "sim-0746ff86",
+        "message": "No order was broadcast. Demo mode."
+      },
+      "lens": "TESTNET · SIMULATED\nORDER ACCEPTED\nsim-0746ff86\n\nTAP to retry"
+    }
+  ]
+}
