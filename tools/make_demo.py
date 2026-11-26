@@ -67,7 +67,7 @@ def frame(trace, t, step_i, frac):
     d.text((X_LENS, Y_LENS - 32), "GLASSES DISPLAY  576 × 288", font=f14, fill=DIM)
     step = trace["steps"][step_i]
     lens_lines = wrap(step["lens"], 30)[:8]
-    revealed = int(len("".join(lens_lines)) * min(1.0, frac * 1.8))
+    revealed = int(len("".join(lens_lines)) * min(1.0, frac * 3.5))
     consumed = 0
     y = Y_LENS + 26
     for line in lens_lines:
@@ -121,7 +121,8 @@ def main():
         raise SystemExit("ffmpeg not found")
     trace = json.loads(TRACE.read_text())
     steps = trace["steps"]
-    per_step = 3.6
+    # Paced to the natural Indian-English narration (docs/narration-script.md).
+    per_step = 7.5
     total = len(steps) * per_step + 1.5
 
     with tempfile.TemporaryDirectory() as tmp:

@@ -13,6 +13,7 @@ All notable changes are documented here. Format follows [Keep a Changelog](https
 - Demo assets generated from a real backend API trace (`docs/`), browser preview (`demo/index.html`), and regeneration tools (`tools/`).
 - Research basis: `../reports/G2 hackathon track selection.md` and `../research/position_glance_strategy_and_build_plan.md`.
 - Dependency-free smoke test (`tests/smoke.mjs`, 8 checks), MIT license, contributing guide, security policy, code of conduct, and CI workflow.
+- Human-paced Indian-English narration (macOS `Rishi`, en-IN) muxed into `docs/demo-voice.mp4`, with `docs/narration-script.md` and `tools/add_narration.py`.
 
 ### Fixed
 

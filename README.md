@@ -14,7 +14,9 @@
 
 ![Position Glance preview](docs/demo.gif)
 
-[Watch demo (MP4)](docs/demo.mp4) · [Transcript](docs/demo-transcript.txt)
+**[Watch with Indian-English voiceover (MP4, 42s)](docs/demo-voice.mp4)** · [Silent version](docs/demo.mp4) · [Narration script](docs/narration-script.md) · [API trace](docs/demo-trace.json)
+
+The voiceover uses macOS's built-in **Rishi (en-IN)** voice at a natural conversational pace — no cloud TTS and no "AI narrator" phrasing. Regenerate with `python3 tools/add_narration.py` after `python3 tools/make_demo.py`.
 
 ---
 
@@ -123,7 +125,8 @@ tools/make_demo.py       regenerates the demo video from a real API trace
 tests/smoke.mjs          8 dependency-free backend checks
 .github/workflows/ci.yml backend smoke test + client build
 docs/ARCHITECTURE.md     sequence diagram, safety boundaries, limitations
-docs/                    demo.mp4, demo.gif, transcript
+docs/                    demo-voice.mp4 (narrated), demo.mp4 (silent), demo.gif,
+                         demo-narration.m4a, narration-script.md, demo-trace.json
 ```
 
 Run `npm test` for the dependency-free smoke test and `npm run check` for syntax validation.
