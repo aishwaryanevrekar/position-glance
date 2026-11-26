@@ -1,6 +1,14 @@
 # Position Glance
 
+[![CI](https://github.com/aishwaryanevrekar/position-glance/actions/workflows/ci.yml/badge.svg)](https://github.com/aishwaryanevrekar/position-glance/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-8%20passing-brightgreen)](tests/smoke.mjs)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D20.19-339933?logo=node.js)](https://nodejs.org)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](CONTRIBUTING.md)
+
 **Track 02 · Crypto & DeFi** — G2 smart-glasses app that shows one Hyperliquid testnet position with unrealized PnL, turns a short voice phrase into a reduce-only order, and submits it only after an explicit tap on the glasses or R1 ring.
+
+**Open source under MIT.** Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), [CHANGELOG.md](CHANGELOG.md) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 > One number. One sentence. One tap.
 
@@ -112,5 +120,10 @@ server/signer.mjs        one-use consent tokens, reduce-only testnet signing
 server/telegram.mjs      optional Track 01 bridge: pairing, status, YES/NO close, receipts
 demo/index.html          browser preview of the 576×288 lens + live API trace
 tools/make_demo.py       regenerates the demo video from a real API trace
+tests/smoke.mjs          8 dependency-free backend checks
+.github/workflows/ci.yml backend smoke test + client build
+docs/ARCHITECTURE.md     sequence diagram, safety boundaries, limitations
 docs/                    demo.mp4, demo.gif, transcript
 ```
+
+Run `npm test` for the dependency-free smoke test and `npm run check` for syntax validation.

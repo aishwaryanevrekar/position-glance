@@ -11,7 +11,9 @@
     "pack": "npm run build && evenhub pack app.json dist",
     "simulate": "evenhub-simulator http://localhost:5173",
     "server": "node server/server.mjs",
-    "start": "node server/server.mjs"
+    "start": "node server/server.mjs",
+    "test": "node tests/smoke.mjs",
+    "check": "node --check server/server.mjs && node --check server/telegram.mjs && node --check tests/smoke.mjs"
   },
   "dependencies": {
     "@evenrealities/even_hub_sdk": "^0.0.14"
