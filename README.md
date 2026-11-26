@@ -23,6 +23,17 @@ Checking a position on a phone means unlocking, finding the app, reading a dashb
 5. **Consent** — the parsed order is shown on the lens. **Tap = YES**, **swipe = NO**, **double-tap = exit**. A one-use, 60-second consent token is issued.
 6. **Write** — only after YES does the backend sign and submit a reduce-only `IoC` order through an **agent wallet with no withdrawal rights**. The private key never leaves the server and never enters the WebView.
 
+## Optional Telegram bridge (Track 01 + Best Telegram prize)
+
+Set `TELEGRAM_BOT_TOKEN` (from `@BotFather`) to enable a second-track flow with no extra infrastructure — long polling, no webhook or TLS:
+
+- `/pair 0x...` — pair a public master address (read-only)
+- `/status` — show the same one-position glance in chat
+- `/close half` / `/close all` — draft a reduce-only order, then confirm with an inline **YES · SEND** / **NO · CANCEL** button
+- Every order confirmed on the glasses pushes the same receipt to paired chats
+
+This makes the build genuinely eligible for both **Track 02** and **Track 01** plus the **$1,000 Best Telegram integration** special prize. The bot token stays on the backend. With no token set, the bridge is simply disabled and the app is a pure Track 02 entry.
+
 ## Safety
 
 - Testnet only; demos use simulated data by default (`DEMO_MODE=true`).
@@ -98,6 +109,7 @@ server/config.mjs        env (no secrets sent to client)
 server/hyperliquid.mjs   /info reads, demo fixture, formatting
 server/intent.mjs        WAV wrapping, STT, intent parsing, size resolution
 server/signer.mjs        one-use consent tokens, reduce-only testnet signing
+server/telegram.mjs      optional Track 01 bridge: pairing, status, YES/NO close, receipts
 demo/index.html          browser preview of the 576×288 lens + live API trace
 tools/make_demo.py       regenerates the demo video from a real API trace
 docs/                    demo.mp4, demo.gif, transcript

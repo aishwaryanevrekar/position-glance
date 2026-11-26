@@ -5,6 +5,7 @@ import { config, publicConfig } from './config.mjs';
 import { getPosition } from './hyperliquid.mjs';
 import { transcribe, parseIntent, resolveOrder } from './intent.mjs';
 import { createConsent, execute } from './signer.mjs';
+import { start as startTelegram, notifyReceipt } from './telegram.mjs';
 
 const ROOT = config.root;
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png' };
@@ -90,6 +91,7 @@ const server = http.createServer(async (req, res) => {
         return send(res, 200, { ok: false, message: 'Confirmation not given. Nothing was sent.' });
       }
       const result = await execute(String(body.confirmToken || ''));
+      void notifyReceipt(result); // push the same receipt to paired Telegram chats
       return send(res, 200, result);
     }
 
@@ -115,6 +117,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(config.port, () => {
+  startTelegram();
   console.log(`[position-glance] backend on http://localhost:${config.port}`);
   console.log(`[position-glance] demoMode=${config.demoMode} capabilities=${JSON.stringify(config.capabilities)}`);
   console.log(`[position-glance] ALLOWED_ORIGIN=${config.allowedOrigin}`);

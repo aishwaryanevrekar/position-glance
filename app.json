@@ -1,11 +1,20 @@
 {
-  "package_id": "com.evenrealities.positionglance",
+  "package_id": "com.positionglance.app",
   "edition": "202601",
   "name": "Position Glance",
   "version": "1.0.0",
-  "min_app_version": "2.0.0",
   "min_sdk_version": "0.0.14",
   "entrypoint": "index.html",
-  "permissions": ["g2-microphone", "phone-microphone"],
+  "permissions": [
+    {
+      "name": "network",
+      "desc": "Fetches the paired position and sends voice commands to the Position Glance backend.",
+      "whitelist": ["localhost:8787"]
+    },
+    {
+      "name": "g2-microphone",
+      "desc": "Captures a short voice command to create a reduce-only testnet order."
+    }
+  ],
   "supported_languages": ["en"]
 }

@@ -7,3 +7,4 @@ dist/
 .DS_Store
 ._*
 *.log
+data/telegram-pairings.json
